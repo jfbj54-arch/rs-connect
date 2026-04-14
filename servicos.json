@@ -1,11 +1,3 @@
 {
-    "servicos": [
-        {
-            "id": 1,
-            "titulo": "SERVIÇO DE TESTE",
-            "descricao": "SERVIÇO INICIAL PARA CORRIGIR O GITHUB PAGES",
-            "valor": "0",
-            "status": "disponivel"
-        }
-    ]
+    "servicos": []
 }
