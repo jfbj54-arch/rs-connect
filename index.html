@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS CONNECT | Trabalhador</title>
+
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .bg-rs-blue { background-color: #007bff; }
+        .text-rs-blue { color: #007bff; }
+        .border-rs-blue { border-color: #007bff; }
+        ::-webkit-scrollbar { width: 0px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn .4s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- ========== LOGIN DO TRABALHADOR ========== -->
+    <section id="tela-auth" class="h-full flex items-center justify-center p-6 bg-gradient-to-b from-slate-100 to-slate-200">
+        <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-10 border border-gray-100 animate-fadeIn">
+
+            <!-- LOGO -->
+            <div class="flex flex-col items-center mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-rs-blue flex items-center justify-center shadow-lg mb-4">
+                    <span class="text-2xl">👷</span>
+                </div>
+                <h1 class="text-rs-blue font-black text-xl tracking-[0.2em] uppercase italic">
+                    RS CONNECT
+                </h1>
+            </div>
+
+            <h2 class="text-2xl font-black text-slate-800 mb-2 uppercase italic text-center">
+                Acesso do Trabalhador
+            </h2>
+            <p class="text-slate-400 text-[11px] uppercase font-bold tracking-widest text-center mb-8">
+                Entre para receber serviços
+            </p>
+
+            <div class="space-y-4">
+
+                <!-- EMAIL -->
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">📧</span>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Seu e-mail"
+                        class="w-full pl-12 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none text-sm focus:border-rs-blue transition"
+                    >
+                </div>
+
+                <!-- SENHA -->
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">🔒</span>
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Senha"
+                        class="w-full pl-12 pr-16 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none text-sm focus:border-rs-blue transition"
+                    >
+                    <button
+                        type="button"
+                        onclick="window.toggleSenha()"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-bold uppercase text-slate-400 hover:text-rs-blue tracking-widest"
+                    >
+                        Ver
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- BOTÃO LOGIN -->
+            <button
+                onclick="window.fazerLogin()"
+                class="w-full bg-rs-blue text-white font-black py-4 rounded-2xl mt-8 shadow-xl uppercase text-xs tracking-widest active:scale-95 transition hover:bg-blue-600"
+            >
+                Entrar
+            </button>
+        </div>
+    </section>
+    <!-- ========== APP DO TRABALHADOR ========== -->
+    <section id="tela-app" class="hidden h-full flex flex-col bg-slate-50">
+
+        <!-- HEADER -->
+        <header class="bg-white p-4 border-b flex justify-between items-center shadow-sm">
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Trabalhador</p>
+                <h1 class="text-rs-blue font-black text-lg italic tracking-tight uppercase">RS CONNECT</h1>
+            </div>
+            <button onclick="window.sair()" class="text-red-500 font-black text-[10px] uppercase">
+                Sair
+            </button>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="flex-1 overflow-y-auto p-4 pb-20">
+            <!-- ========== TELA: SERVIÇOS DISPONÍVEIS ========== -->
+            <div id="view-servicos" class="animate-fadeIn">
+
+                <h2 class="text-xl font-black text-slate-800 mb-2 uppercase italic">
+                    Serviços Disponíveis
+                </h2>
+                <p class="text-[11px] text-slate-400 uppercase tracking-widest mb-4">
+                    Aceite serviços para começar a trabalhar
+                </p>
+
+                <!-- Serviço 1 -->
+                <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-[12px] font-black text-slate-700 uppercase">Limpeza Residencial</p>
+                        <span class="text-[11px] text-blue-600 font-black uppercase">Novo</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-1">Empresa: RS Serviços</p>
+                    <p class="text-[11px] text-slate-400 mb-3">Hoje • 14:00</p>
+                    <button
+                        class="w-full text-[11px] font-black uppercase tracking-widest bg-rs-blue text-white py-2 rounded-xl active:scale-95 transition"
+                        onclick="window.verServico('Limpeza Residencial')"
+                    >
+                        Ver detalhes
+                    </button>
+                </div>
+
+                <!-- Serviço 2 -->
+                <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-[12px] font-black text-slate-700 uppercase">Auxiliar de Carga</p>
+                        <span class="text-[11px] text-amber-600 font-black uppercase">Aguardando</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-1">Empresa: Logística Sul</p>
+                    <p class="text-[11px] text-slate-400 mb-3">Amanhã • 08:00</p>
+                    <button
+                        class="w-full text-[11px] font-black uppercase tracking-widest bg-rs-blue text-white py-2 rounded-xl active:scale-95 transition"
+                        onclick="window.verServico('Auxiliar de Carga')"
+                    >
+                        Ver detalhes
+                    </button>
+                </div>
+
+            </div>
+            <!-- ========== TELA: DETALHE DO SERVIÇO ========== -->
+            <div id="view-servico-detalhe" class="hidden animate-fadeIn">
+
+                <button
+                    class="text-[11px] text-slate-400 mb-3 uppercase tracking-widest"
+                    onclick="window.mudarView('view-servicos')"
+                >
+                    ⬅ Voltar
+                </button>
+
+                <h2 id="servico-nome" class="text-xl font-black text-slate-800 mb-2 uppercase italic">
+                    Serviço
+                </h2>
+
+                <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-slate-100">
+                    <p class="text-[12px] text-slate-500 mb-1"><strong>Empresa:</strong> RS Serviços</p>
+                    <p class="text-[12px] text-slate-500 mb-1"><strong>Local:</strong> Bairro Centro</p>
+                    <p class="text-[12px] text-slate-500 mb-1"><strong>Horário:</strong> Hoje • 14:00</p>
+                    <p class="text-[12px] text-slate-500 mt-3">
+                        <strong>Descrição:</strong> Serviço simples, rápido e bem avaliado por outros trabalhadores.
+                    </p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button
+                        class="w-1/2 text-[11px] font-black uppercase tracking-widest bg-emerald-600 text-white py-3 rounded-2xl active:scale-95 transition"
+                        onclick="window.aceitarServico()"
+                    >
+                        Aceitar
+                    </button>
+
+                    <button
+                        class="w-1/2 text-[11px] font-black uppercase tracking-widest bg-red-500 text-white py-3 rounded-2xl active:scale-95 transition"
+                        onclick="window.recusarServico()"
+                    >
+                        Recusar
+                    </button>
+                </div>
+            </div>
+            <!-- ========== TELA: SERVIÇOS ACEITOS ========== -->
+            <div id="view-servicos-aceitos" class="hidden animate-fadeIn">
+
+                <h2 class="text-xl font-black text-slate-800 mb-2 uppercase italic">
+                    Meus Serviços
+                </h2>
+                <p class="text-[11px] text-slate-400 uppercase tracking-widest mb-4">
+                    Serviços que você aceitou e está realizando
+                </p>
+
+                <!-- Serviço Aceito 1 -->
+                <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-[12px] font-black text-slate-700 uppercase">Limpeza Residencial</p>
+                        <span class="text-[11px] text-emerald-600 font-black uppercase">Em andamento</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-1">Empresa: RS Serviços</p>
+                    <p class="text-[11px] text-slate-400 mb-3">Hoje • 14:00</p>
+
+                    <button
+                        class="w-full text-[11px] font-black uppercase tracking-widest bg-emerald-600 text-white py-2 rounded-xl active:scale-95 transition"
+                        onclick="alert('Serviço finalizado (simulação).')"
+                    >
+                        Finalizar Serviço
+                    </button>
+                </div>
+
+            </div>
+            <!-- ========== TELA: PERFIL DO TRABALHADOR ========== -->
+            <div id="view-perfil" class="hidden animate-fadeIn">
+
+                <h2 class="text-xl font-black text-slate-800 mb-2 uppercase italic">
+                    Meu Perfil
+                </h2>
+
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+
+                    <p class="text-[12px] text-slate-500 mb-2">
+                        <strong>Nome:</strong> João da Silva
+                    </p>
+
+                    <p class="text-[12px] text-slate-500 mb-2">
+                        <strong>Categoria:</strong> Serviços Gerais
+                    </p>
+
+                    <p class="text-[12px] text-slate-500 mb-2">
+                        <strong>Avaliação:</strong> ⭐⭐⭐⭐☆
+                    </p>
+
+                    <p class="text-[12px] text-slate-500 mb-2">
+                        <strong>Status:</strong> Disponível para novos serviços
+                    </p>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- MENU INFERIOR -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+            <div class="flex justify-around py-2 text-[10px] uppercase font-black tracking-widest">
+
+                <button
+                    onclick="window.abrirTab('servicos')"
+                    id="tab-servicos"
+                    class="flex flex-col items-center text-rs-blue"
+                >
+                    <span>📋</span>
+                    <span>Serviços</span>
+                </button>
+
+                <button
+                    onclick="window.abrirTab('aceitos')"
+                    id="tab-aceitos"
+                    class="flex flex-col items-center text-slate-400"
+                >
+                    <span>🧰</span>
+                    <span>Meus Serviços</span>
+                </button>
+
+                <button
+                    onclick="window.abrirTab('perfil')"
+                    id="tab-perfil"
+                    class="flex flex-col items-center text-slate-400"
+                >
+                    <span>👤</span>
+                    <span>Perfil</span>
+                </button>
+
+            </div>
+        </nav>
+    </section>
+
+    <!-- ========== SCRIPT ========== -->
+    <script>
+
+        window.trocarTela = function(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        };
+
+        window.fazerLogin = function() {
+            window.trocarTela('tela-app');
+            window.abrirTab('servicos');
+        };
+
+        window.sair = function() {
+            window.trocarTela('tela-auth');
+        };
+
+        window.toggleSenha = function() {
+            const i = document.getElementById('senha');
+            i.type = i.type === 'password' ? 'text' : 'password';
+        };
+
+        const views = [
+            'view-servicos',
+            'view-servico-detalhe',
+            'view-servicos-aceitos',
+            'view-perfil'
+        ];
+
+        window.mudarView = function(viewId) {
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                if (v === viewId) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        };
+
+        window.abrirTab = function(tab) {
+
+            document.getElementById('tab-servicos').classList.add('text-slate-400');
+            document.getElementById('tab-aceitos').classList.add('text-slate-400');
+            document.getElementById('tab-perfil').classList.add('text-slate-400');
+
+            if (tab === 'servicos') {
+                document.getElementById('tab-servicos').classList.remove('text-slate-400');
+                document.getElementById('tab-servicos').classList.add('text-rs-blue');
+                window.mudarView('view-servicos');
+            }
+
+            if (tab === 'aceitos') {
+                document.getElementById('tab-aceitos').classList.remove('text-slate-400');
+                document.getElementById('tab-aceitos').classList.add('text-rs-blue');
+                window.mudarView('view-servicos-aceitos');
+            }
+
+            if (tab === 'perfil') {
+                document.getElementById('tab-perfil').classList.remove('text-slate-400');
+                document.getElementById('tab-perfil').classList.add('text-rs-blue');
+                window.mudarView('view-perfil');
+            }
+        };
+
+        window.verServico = function(nome) {
+            document.getElementById('servico-nome').textContent = nome;
+            window.mudarView('view-servico-detalhe');
+        };
+
+        window.aceitarServico = function() {
+            alert("Serviço aceito (simulação).");
+            window.abrirTab('aceitos');
+        };
+
+        window.recusarServico = function() {
+            alert("Serviço recusado (simulação).");
+            window.abrirTab('servicos');
+        };
+
+    </script>
+
+</body>
+</html>
