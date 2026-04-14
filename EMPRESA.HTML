@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Serviço</title>
+</head>
+<body>
+
+    <h2>Cadastro de Serviço</h2>
+
+    <input id="titulo" placeholder="Título do serviço"><br><br>
+    <input id="descricao" placeholder="Descrição"><br><br>
+    <input id="valor" placeholder="Valor"><br><br>
+
+    <button onclick="salvarServico()">Salvar Serviço</button>
+
+<script>
 async function salvarServico() {
     const titulo = document.getElementById("titulo").value;
     const descricao = document.getElementById("descricao").value;
@@ -13,7 +31,7 @@ async function salvarServico() {
 
     const url = "https://api.github.com/repos/jfbj54-arch/rs-connect/contents/servicos.json";
 
-    const token = "Bearer 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";
+    const token = "Bearer SEU_TOKEN_AQUI";
 
     const resposta = await fetch(url, {
         headers: {
@@ -47,3 +65,7 @@ async function salvarServico() {
 
     alert("Serviço cadastrado com sucesso!");
 }
+</script>
+
+</body>
+</html>
