@@ -13,15 +13,17 @@ async function salvarServico() {
 
     const url = "https://api.github.com/repos/jfbj54-arch/rs-connect/contents/servicos.json";
 
+    const token = "Bearer SEU_TOKEN_AQUI";
+
     const resposta = await fetch(url, {
         headers: {
-            "Authorization": "Bearer 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"
+            "Authorization": token
         }
     });
+
     const dados = await resposta.json();
     const conteudoAtual = JSON.parse(atob(dados.content));
 
-    // Garante que a chave "servicos" exista
     if (!conteudoAtual.servicos) {
         conteudoAtual.servicos = [];
     }
@@ -34,7 +36,7 @@ async function salvarServico() {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer SEU_TOKEN_AQUI"
+            "Authorization": token
         },
         body: JSON.stringify({
             message: "Novo serviço adicionado",
