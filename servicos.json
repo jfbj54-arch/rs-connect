@@ -1,3 +1,11 @@
 {
-    "servicos": []
+  "servicos": [
+    {
+      "id": 999,
+      "titulo": "SERVIÇO TEMPORÁRIO",
+      "descricao": "SERVIÇO PARA DESBLOQUEAR O GITHUB PAGES",
+      "valor": "0",
+      "status": "disponivel"
+    }
+  ]
 }
