@@ -1,10 +1,25 @@
 {
+{
   "servicos": [
     {
       "id": 999,
       "titulo": "SERVIÇO TEMPORÁRIO",
       "descricao": "SERVIÇO PARA DESBLOQUEAR O GITHUB PAGES",
       "valor": "0",
+      "status": "disponivel"
+    },
+    {
+      "id": 1000,
+      "titulo": "Criação de Landing Page",
+      "descricao": "Desenvolvimento de página inicial personalizada para negócios locais",
+      "valor": "250",
+      "status": "disponivel"
+    },
+    {
+      "id": 1001,
+      "titulo": "Manutenção de Site",
+      "descricao": "Correções e atualizações em sites já publicados",
+      "valor": "150",
       "status": "disponivel"
     }
   ]
