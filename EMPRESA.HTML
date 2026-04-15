@@ -1,57 +1,104 @@
-async function salvarServico() {
-    const titulo = document.getElementById("titulo").value;
-    const descricao = document.getElementById("descricao").value;
-    const valor = document.getElementById("valor").value;
+as<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>RS CONNECT - Empresa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    if (!titulo || !valor) return alert("Preencha os campos obrigatórios!");
-
-    const novoServico = {
-        id: Date.now(),
-        titulo,
-        descricao,
-        valor: parseFloat(valor.replace(',', '.')), // Converte para número
-        status: "disponivel"
-    };
-
-    const url = "https://api.github.com/repos/jfbj54-arch/rs-connect/contents/servicos.json"
-
-    try {
-        // Busca o arquivo atual
-        const resposta = await fetch(url, { headers: { "Authorization": token } });
-        
-        if (!resposta.ok) throw new Error("Erro ao buscar arquivo");
-
-        const dados = await resposta.json();
-        // Decodifica UTF-8 corretamente (melhor que atob para caracteres especiais)
-        const conteudoAtual = JSON.parse(decodeURIComponent(escape(window.atob(dados.content))));
-
-        if (!conteudoAtual.servicos) conteudoAtual.servicos = [];
-        conteudoAtual.servicos.push(novoServico);
-
-        // Codifica para Base64
-        const novoConteudo = window.btoa(unescape(encodeURIComponent(JSON.stringify(conteudoAtual, null, 2))));
-
-        // Faz o Update
-        const update = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": token
-            },
-            body: JSON.stringify({
-                message: `Adicionado serviço: ${titulo}`,
-                content: novoConteudo,
-                sha: dados.sha
-            })
-        });
-
-        if (update.ok) {
-            alert("Serviço cadastrado com sucesso!");
-            document.querySelectorAll("input").forEach(i => i.value = ""); // Limpa campos
-        }
-
-    } catch (erro) {
-        console.error(erro);
-        alert("Erro ao salvar. Verifique o console.");
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
     }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0a66c2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #084d94;
+    }
+
+    .info {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #555;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Cadastro de Serviço</h2>
+
+  <input id="titulo" placeholder="Título do serviço">
+  <textarea id="descricao" placeholder="Descrição do serviço"></textarea>
+  <input id="valor" placeholder="Valor (ex: 250)">
+
+  <button onclick="cadastrar()">Cadastrar Serviço</button>
+
+  <div class="info">
+    Após clicar, você será direcionado ao GitHub para confirmar o cadastro.
+  </div>
+</div>
+
+<script>
+function cadastrar() {
+  const titulo = document.getElementById("titulo").value.trim();
+  const descricao = document.getElementById("descricao").value.trim();
+  const valor = document.getElementById("valor").value.trim();
+
+  if (!titulo || !descricao || !valor) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  alert(
+    "Você será redirecionado para o GitHub.\n\n" +
+    "No GitHub:\n" +
+    "1) Clique em RUN WORKFLOW\n" +
+    "2) Preencha os campos com os dados\n" +
+    "3) Confirme\n"
+  );
+
+  // 👉 AJUSTE para o seu repositório
+  const workflowURL =
+    "https://github.com/jfbj54-arch/rs-connect/actions/workflows/servicos.yml";
+
+  window.open(workflowURL, "_blank");
 }
+</script>
+
+</body>
+</html>
