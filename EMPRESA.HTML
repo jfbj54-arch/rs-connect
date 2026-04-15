@@ -1,71 +1,58 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Serviço</title>
-</head>
-<body>
-
-    <h2>Cadastro de Serviço</h2>
-
-    <input id="titulo" placeholder="Título do serviço"><br><br>
-    <input id="descricao" placeholder="Descrição"><br><br>
-    <input id="valor" placeholder="Valor"><br><br>
-
-    <button onclick="salvarServico()">Salvar Serviço</button>
-
-<script>
 async function salvarServico() {
     const titulo = document.getElementById("titulo").value;
     const descricao = document.getElementById("descricao").value;
     const valor = document.getElementById("valor").value;
 
+    if (!titulo || !valor) return alert("Preencha os campos obrigatórios!");
+
     const novoServico = {
         id: Date.now(),
         titulo,
         descricao,
-        valor,
+        valor: parseFloat(valor.replace(',', '.')), // Converte para número
         status: "disponivel"
     };
 
     const url = "https://api.github.com/repos/jfbj54-arch/rs-connect/contents/servicos.json";
+    const token = "Bearer SEU_NOVO_TOKEN_AQUI";
 
-    const token = "Bearer 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";
+    try {
+        // Busca o arquivo atual
+        const resposta = await fetch(url, { headers: { "Authorization": token } });
+        
+        if (!resposta.ok) throw new Error("Erro ao buscar arquivo");
 
-    const resposta = await fetch(url, {
-        headers: {
-            "Authorization": token
+        const dados = await resposta.json();
+        // Decodifica UTF-8 corretamente (melhor que atob para caracteres especiais)
+        const conteudoAtual = JSON.parse(decodeURIComponent(escape(window.atob(dados.content))));
+
+        if (!conteudoAtual.servicos) conteudoAtual.servicos = [];
+        conteudoAtual.servicos.push(novoServico);
+
+        // Codifica para Base64
+        const novoConteudo = window.btoa(unescape(encodeURIComponent(JSON.stringify(conteudoAtual, null, 2))));
+
+        // Faz o Update
+        const update = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            },
+            body: JSON.stringify({
+                message: `Adicionado serviço: ${titulo}`,
+                content: novoConteudo,
+                sha: dados.sha
+            })
+        });
+
+        if (update.ok) {
+            alert("Serviço cadastrado com sucesso!");
+            document.querySelectorAll("input").forEach(i => i.value = ""); // Limpa campos
         }
-    });
 
-    const dados = await resposta.json();
-    const conteudoAtual = JSON.parse(atob(dados.content));
-
-    if (!conteudoAtual.servicos) {
-        conteudoAtual.servicos = [];
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro ao salvar. Verifique o console.");
     }
-
-    conteudoAtual.servicos.push(novoServico);
-
-    const novoConteudo = btoa(JSON.stringify(conteudoAtual, null, 2));
-
-    await fetch(url, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token
-        },
-        body: JSON.stringify({
-            message: "Novo serviço adicionado",
-            content: novoConteudo,
-            sha: dados.sha
-        })
-    });
-
-    alert("Serviço cadastrado com sucesso!");
 }
-</script>
-
-</body>
-</html>
