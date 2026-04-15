@@ -4,84 +4,63 @@
   <meta charset="UTF-8" />
   <title>RS CONNECT - Trabalhador</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
-    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 10px; }
-
+    body { font-family: Arial, sans-serif; background:#f2f2f2; padding:20px; }
+    h1 { text-align:center; margin: 6px 0 10px; }
     .topbar{
-      max-width: 980px;
-      margin: 0 auto 15px auto;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
+      max-width:980px; margin:0 auto 14px auto;
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
     }
-
+    .left{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
     .pill{
-      background:#fff;
-      border:1px solid #ddd;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:13px;
-      color:#333;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background:#fff; border:1px solid #ddd;
+      padding:8px 12px; border-radius:999px;
+      font-size:13px; color:#333;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
     }
-
     .btn{
-      padding:10px 14px;
-      border:none;
-      border-radius:8px;
-      cursor:pointer;
-      background:#0a66c2;
-      color:#fff;
-      font-weight:600;
+      padding:10px 14px; border:none; border-radius:10px;
+      cursor:pointer; background:#0a66c2; color:#fff; font-weight:700;
     }
     .btn:hover{ background:#084d94; }
+    .btn.green{ background:#28a745; }
+    .btn.green:hover{ background:#218838; }
+    .btn.gray{ background:#444; }
+    .btn.gray:hover{ background:#222; }
 
-    .grid {
-      max-width: 980px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
+    .grid{
+      max-width:980px; margin:0 auto;
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+      gap:15px;
     }
-
-    .card {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border-left: 6px solid #28a745;
+    .card{
+      background:#fff; padding:15px; border-radius:12px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+      border-left:6px solid #28a745;
     }
-
-    .card h3 { margin: 0 0 10px; }
-    .valor { font-weight: bold; color: #0a66c2; margin: 8px 0; }
-    .status { font-size: 13px; color: #28a745; margin-bottom: 10px; }
-
-    .info {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 14px;
-      color: #555;
-      max-width: 980px;
-      margin-left:auto;
-      margin-right:auto;
+    .card h3{ margin:0 0 10px; }
+    .valor{ font-weight:bold; color:#0a66c2; margin:8px 0; }
+    .status{ font-size:13px; color:#28a745; margin-bottom:10px; }
+    .info{
+      max-width:980px; margin:16px auto 0;
+      text-align:center; font-size:14px; color:#555;
     }
-
     .muted{ color:#666; font-size:12px; }
   </style>
 </head>
-
 <body>
 
 <h1>Serviços Disponíveis</h1>
 
 <div class="topbar">
-  <div class="pill">
-    🔄 Atualização automática: <strong>10s</strong>
-    <span class="muted">| Última: <span id="ultimaAtualizacao">--:--:--</span></span>
+  <div class="left">
+    <div class="pill">
+      🔄 Atualização automática: <strong>10s</strong>
+      <span class="muted">| Última: <span id="ultimaAtualizacao">--:--:--</span></span>
+    </div>
+    <button class="btn gray" onclick="irParaEmpresa()">Sou empresa (cadastrar)</button>
   </div>
 
   <button class="btn" onclick="carregarServicos(true)">Atualizar agora</button>
@@ -94,33 +73,23 @@
 </div>
 
 <script>
-  // ✅ URL do JSON (RAW) — sempre pega o arquivo "cru"
-  const SERVICOS_URL =
-    "https://raw.githubusercontent.com/jfbj54-arch/rs-connect/main/servicos.json";
+  // ✅ Ajustado para o seu repo:
+  const SERVICOS_URL = "https://raw.githubusercontent.com/jfbj54-arch/rs-connect/main/servicos.json";
+  const WORKFLOW_URL = "https://github.com/jfbj54-arch/rs-connect/actions/workflows/servicos.yml";
+  const EMPRESA_PAGE = "EMPRESA.html"; // (ou EMPRESA.HTML, mas recomendo deixar como EMPRESA.html)
 
-  // ✅ URL do Workflow
-  const WORKFLOW_URL =
-    "https://github.com/jfbj54-arch/rs-connect/actions/workflows/servicos.yml";
-
-  // ⏱️ Intervalo de atualização automática
-  const INTERVALO_MS = 10000; // 10 segundos
+  const INTERVALO_MS = 10000;
   let timer = null;
 
   function horaAgora() {
     const d = new Date();
-    const hh = String(d.getHours()).padStart(2, "0");
-    const mm = String(d.getMinutes()).padStart(2, "0");
-    const ss = String(d.getSeconds()).padStart(2, "0");
-    return `${hh}:${mm}:${ss}`;
+    return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0");
   }
 
-  async function carregarServicos(manual = false) {
+  async function carregarServicos(manual=false) {
     const lista = document.getElementById("lista");
-
     try {
-      // 💡 Anti-cache: adiciona timestamp para sempre buscar o mais recente
       const urlComAntiCache = `${SERVICOS_URL}?t=${Date.now()}`;
-
       const resp = await fetch(urlComAntiCache, { cache: "no-store" });
       const data = await resp.json();
 
@@ -135,24 +104,19 @@
         disponiveis.forEach(servico => {
           const card = document.createElement("div");
           card.className = "card";
-
           card.innerHTML = `
             <h3>${servico.titulo}</h3>
             <p>${servico.descricao}</p>
             <div class="valor">R$ ${servico.valor}</div>
             <div class="status">Status: Disponível</div>
-            <button class="btn" style="background:#28a745" onclick="aceitar(${servico.id})">Aceitar Serviço</button>
+            <button class="btn green" onclick="aceitar(${servico.id})">Aceitar Serviço</button>
           `;
-
           lista.appendChild(card);
         });
       }
 
       document.getElementById("ultimaAtualizacao").textContent = horaAgora();
-
-      // Se foi manual, mostra uma confirmação sutil
       if (manual) console.log("Atualizado manualmente:", horaAgora());
-
     } catch (e) {
       console.error(e);
       lista.innerHTML = "<p>Erro ao carregar serviços. Verifique se o servicos.json existe e está público.</p>";
@@ -172,16 +136,18 @@
     window.open(WORKFLOW_URL, "_blank");
   }
 
-  function iniciarAutoAtualizacao() {
+  function iniciarAutoAtualizacao(){
     if (timer) clearInterval(timer);
     timer = setInterval(() => carregarServicos(false), INTERVALO_MS);
   }
 
-  // Primeira carga + iniciar atualização automática
+  function irParaEmpresa(){
+    window.location.href = EMPRESA_PAGE;
+  }
+
   carregarServicos(false);
   iniciarAutoAtualizacao();
 </script>
 
 </body>
 </html>
-``
