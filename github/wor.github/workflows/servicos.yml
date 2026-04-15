@@ -1,0 +1,43 @@
+name: Gerenciar Serviços
+
+on:
+  workflow_dispatch:
+    inputs:
+      acao:
+        description: "criar ou aceitar"
+        required: true
+      id:
+        description: "id do serviço (para aceitar)"
+        required: false
+      titulo:
+        description: "título (para criar)"
+        required: false
+      descricao:
+        description: "descrição (para criar)"
+        required: false
+      valor:
+        description: "valor (para criar)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          node .github/scripts/atualizar-servicos.mjs \
+            --acao "${{ inputs.acao }}" \
+            --id "${{ inputs.id }}" \
+            --titulo "${{ inputs.titulo }}" \
+            --descricao "${{ inputs.descricao }}" \
+            --valor "${{ inputs.valor }}"
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Atualiza servicos.json"
+          file_pattern: servicos.json
+``
