@@ -1,84 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>RS CONNECT - Trabalhador</title>
-<style>
-body { font-family: Arial; padding: 20px; }
-.servico {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-button {
-    padding: 10px;
-    background: blue;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>RS CONNECT - Trabalhador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-left: 6px solid #28a745;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+    }
+
+    .valor {
+      font-weight: bold;
+      color: #0a66c2;
+      margin: 8px 0;
+    }
+
+    .status {
+      font-size: 13px;
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #28a745;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .info {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>Serviços Disponíveis</h2>
-<div id="lista"></div>
+<h1>Serviços Disponíveis</h1>
+
+<div id="lista" class="grid"></div>
+
+<div class="info">
+  Ao aceitar um serviço, você será direcionado ao GitHub para confirmar.
+</div>
 
 <script>
-const url = "https://api.github.com/repos/jfbj54-arch/rs-connect/contents/servicos.json";
+  // 🔧 CONFIRME SEU USUÁRIO E REPOSITÓRIO
+  const SERVICOS_URL =
+    "https://raw.githubusercontent.com/jfbj54-arch/rs-connect/main/servicos.json";
 
-async function carregarServicos() {
-    const resposta = await fetch(url);
+  const WORKFLOW_URL =
+    "https://github.com/jfbj54-arch/rs-connect/actions/workflows/servicos.yml";
+
+  async function carregarServicos() {
+    const resposta = await fetch(SERVICOS_URL);
     const dados = await resposta.json();
-    const conteudo = JSON.parse(atob(dados.content));
 
     const lista = document.getElementById("lista");
     lista.innerHTML = "";
 
-    conteudo.servicos
-        .filter(s => s.status === "disponivel")
-        .forEach(servico => {
-            const div = document.createElement("div");
-            div.className = "servico";
-            div.innerHTML = `
-                <h3>${servico.titulo}</h3>
-                <p>${servico.descricao}</p>
-                <p><strong>Valor:</strong> R$ ${servico.valor}</p>
-                <button onclick="aceitar(${servico.id})">Aceitar Serviço</button>
-            `;
-            lista.appendChild(div);
-        });
-}
+    const disponiveis = dados.servicos.filter(
+      servico => servico.status === "disponivel"
+    );
 
-async function aceitar(id) {
-    const resposta = await fetch(url);
-    const dados = await resposta.json();
-    const conteudo = JSON.parse(atob(dados.content));
+    if (disponiveis.length === 0) {
+      lista.innerHTML = "<p>Nenhum serviço disponível no momento.</p>";
+      return;
+    }
 
-    const servico = conteudo.servicos.find(s => s.id === id);
-    servico.status = "aceito";
+    disponiveis.forEach(servico => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-    const novoConteudo = btoa(JSON.stringify(conteudo, null, 2));
+      card.innerHTML = `
+        <h3>${servico.titulo}</h3>
+        <p>${servico.descricao}</p>
+        <div class="valor">R$ ${servico.valor}</div>
+        <div class="status">Status: Disponível</div>
+        <button onclick="aceitar(${servico.id})">
+          Aceitar Serviço
+        </button>
+      `;
 
-    await fetch(url, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
-        },
-        body: JSON.stringify({
-            message: "Serviço aceito pelo trabalhador",
-            content: novoConteudo,
-            sha: dados.sha
-        })
+      lista.appendChild(card);
     });
+  }
 
-    alert("Serviço aceito com sucesso!");
-    carregarServicos();
-}
+  function aceitar(id) {
+    alert(
+      "Você será direcionado ao GitHub.\n\n" +
+      "No GitHub:\n" +
+      "1) Clique em RUN WORKFLOW\n" +
+      "2) Preencha:\n" +
+      "   acao = aceitar\n" +
+      "   id = " + id + "\n" +
+      "3) Confirme"
+    );
 
-carregarServicos();
+    window.open(WORKFLOW_URL, "_blank");
+  }
+
+  carregarServicos();
 </script>
 
 </body>
