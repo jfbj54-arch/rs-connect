@@ -20,6 +20,13 @@
       "descricao": "Correções e atualizações em sites já publicados",
       "valor": "150",
       "status": "disponivel"
+    },
+    {
+      "id": 1776262384730,
+      "titulo": "servico teste",
+      "descricao": "Teste final",
+      "valor": "100",
+      "status": "disponivel"
     }
   ]
 }
